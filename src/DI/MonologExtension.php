@@ -55,7 +55,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 
-		$config = $this->getConfig($this->defaults);
+		$config = $this->validateConfig($this->defaults);
 		$config['logDir'] = self::resolveLogDir($builder->parameters);
 		self::createDirectory($config['logDir']);
 		$this->setConfig($config);
