@@ -106,11 +106,11 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		foreach ($config['handlers'] as $handlerName => $implementation) {
-			Compiler::loadDefinitions($builder, [
-				$serviceName = $this->prefix('handler.' . $handlerName) => $implementation,
+			$this->compiler->loadDefinitionsFromConfig([
+				$serviceName = 'handler.' . $handlerName => $implementation,
 			]);
 
-			$builder->getDefinition($serviceName)
+			$builder->getDefinition($this->prefix($serviceName))
 				->addTag(self::TAG_HANDLER)
 				->addTag(self::TAG_PRIORITY, is_numeric($handlerName) ? $handlerName : 0);
 		}
@@ -148,11 +148,11 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		}
 
 		foreach ($config['processors'] as $processorName => $implementation) {
-			Compiler::loadDefinitions($builder, [
-				$serviceName = $this->prefix('processor.' . $processorName) => $implementation,
+			$this->compiler->loadDefinitionsFromConfig([
+				$serviceName = 'processor.' . $processorName => $implementation,
 			]);
 
-			$builder->getDefinition($serviceName)
+			$builder->getDefinition($this->prefix($serviceName))
 				->addTag(self::TAG_PROCESSOR)
 				->addTag(self::TAG_PRIORITY, is_numeric($processorName) ? $processorName : 0);
 		}
