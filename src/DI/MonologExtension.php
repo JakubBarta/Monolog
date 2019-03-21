@@ -19,8 +19,9 @@ use Kdyby\Monolog\Tracy\BlueScreenRenderer;
 use Kdyby\Monolog\Tracy\MonologAdapter;
 use Nette\Configurator;
 use Nette\DI\Compiler;
+use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Helpers as DIHelpers;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\Statement;
 use Nette\PhpGenerator\ClassType as ClassTypeGenerator;
 use Nette\PhpGenerator\PhpLiteral;
 use Psr\Log\LoggerAwareInterface;
@@ -159,6 +160,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
+		/** @var ServiceDefinition $logger */
 		$logger = $builder->getDefinition($this->prefix('logger'));
 
 		foreach ($handlers = $this->findByTagSorted(self::TAG_HANDLER) as $serviceName => $meta) {
@@ -181,6 +183,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			]);
 		}
 
+		/** @var ServiceDefinition $service */
 		foreach ($builder->findByType(LoggerAwareInterface::class) as $service) {
 			$service->addSetup('setLogger', ['@' . $this->prefix('logger')]);
 		}
