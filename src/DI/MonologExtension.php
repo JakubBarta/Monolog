@@ -46,7 +46,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		'hookToTracy' => TRUE,
 		'tracyBaseUrl' => NULL,
 		'usePriorityProcessor' => TRUE,
-		// 'registerFallback' => TRUE,
+		'registerFallback' => TRUE,
 	];
 
 	public function loadConfiguration()
