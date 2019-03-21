@@ -31,7 +31,6 @@ use Tracy\Debugger;
  */
 class MonologExtension extends \Nette\DI\CompilerExtension
 {
-
 	const TAG_HANDLER = 'monolog.handler';
 	const TAG_PROCESSOR = 'monolog.processor';
 	const TAG_PRIORITY = 'monolog.priority';
@@ -46,7 +45,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		'hookToTracy' => TRUE,
 		'tracyBaseUrl' => NULL,
 		'usePriorityProcessor' => TRUE,
-		'registerFallback' => TRUE,
+		'registerFallback' => FALSE,
 	];
 
 	public function loadConfiguration()
@@ -109,6 +108,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			]);
 
 			$builder->getDefinition($serviceName)
+				->setAutowired(false)
 				->addTag(self::TAG_HANDLER)
 				->addTag(self::TAG_PRIORITY, is_numeric($handlerName) ? $handlerName : 0);
 		}
@@ -169,9 +169,10 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			$logger->addSetup('pushProcessor', ['@' . $serviceName]);
 		}
 
-		$config = $this->getConfig(['registerFallback' => empty($handlers)] + $this->getConfig($this->defaults));
+		$config = $this->getConfig();
 
-		if ($config['registerFallback']) {
+		// use fallback handler if no handlers are set up or user forces it
+		if (count($handlers) === 0 || $config['registerFallback']) {
 			$logger->addSetup('pushHandler', [
 				new Statement(FallbackNetteHandler::class, [
 					'appName' => $config['name'],
