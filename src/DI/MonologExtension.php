@@ -32,8 +32,6 @@ use Tracy\Debugger;
 class MonologExtension extends \Nette\DI\CompilerExtension
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	const TAG_HANDLER = 'monolog.handler';
 	const TAG_PROCESSOR = 'monolog.processor';
 	const TAG_PRIORITY = 'monolog.priority';
