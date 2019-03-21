@@ -69,11 +69,13 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('logger'))
-			->setClass(KdybyLogger::class, [$config['name']]);
+			->setType(KdybyLogger::class)
+			->setArguments([$config['name']]);
 
 		// Tracy adapter
 		$builder->addDefinition($this->prefix('adapter'))
-			->setClass(MonologAdapter::class, [
+			->setType(MonologAdapter::class)
+			->setArguments([
 				'monolog' => $this->prefix('@logger'),
 				'blueScreenRenderer' => $this->prefix('@blueScreenRenderer'),
 				'email' => Debugger::$email,
@@ -82,7 +84,8 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 
 		// The renderer has to be separate, to solve circural service dependencies
 		$builder->addDefinition($this->prefix('blueScreenRenderer'))
-			->setClass(BlueScreenRenderer::class, [
+			->setType(BlueScreenRenderer::class)
+			->setArguments([
 				'directory' => $config['logDir'],
 			])
 			->setAutowired(FALSE)
@@ -120,13 +123,14 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		if ($config['usePriorityProcessor'] === TRUE) {
 			// change channel name to priority if available
 			$builder->addDefinition($this->prefix('processor.priorityProcessor'))
-				->setClass(PriorityProcessor::class)
+				->setType(PriorityProcessor::class)
 				->addTag(self::TAG_PROCESSOR)
 				->addTag(self::TAG_PRIORITY, 20);
 		}
 
 		$builder->addDefinition($this->prefix('processor.tracyException'))
-			->setClass(TracyExceptionProcessor::class, [
+			->setType(TracyExceptionProcessor::class)
+			->setArguments([
 				'blueScreenRenderer' => $this->prefix('@blueScreenRenderer'),
 			])
 			->addTag(self::TAG_PROCESSOR)
@@ -134,7 +138,8 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 
 		if ($config['tracyBaseUrl'] !== NULL) {
 			$builder->addDefinition($this->prefix('processor.tracyBaseUrl'))
-				->setClass(TracyUrlProcessor::class, [
+				->setType(TracyUrlProcessor::class)
+				->setArguments([
 					'baseUrl' => $config['tracyBaseUrl'],
 					'blueScreenRenderer' => $this->prefix('@blueScreenRenderer'),
 				])
