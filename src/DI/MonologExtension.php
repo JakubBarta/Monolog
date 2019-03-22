@@ -20,8 +20,8 @@ use Kdyby\Monolog\Tracy\MonologAdapter;
 use Nette\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\Definitions\ServiceDefinition;
-use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Definitions\Statement;
+use Nette\DI\Helpers as DIHelpers;
 use Nette\PhpGenerator\ClassType as ClassTypeGenerator;
 use Nette\PhpGenerator\PhpLiteral;
 use Psr\Log\LoggerAwareInterface;
@@ -33,6 +33,7 @@ use Tracy\ILogger;
  */
 class MonologExtension extends \Nette\DI\CompilerExtension
 {
+
 	const TAG_HANDLER = 'monolog.handler';
 	const TAG_PROCESSOR = 'monolog.processor';
 	const TAG_PRIORITY = 'monolog.priority';
@@ -112,7 +113,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			]);
 
 			$builder->getDefinition($serviceName)
-				->setAutowired(false)
+				->setAutowired(FALSE)
 				->addTag(self::TAG_HANDLER)
 				->addTag(self::TAG_PRIORITY, is_numeric($handlerName) ? $handlerName : 0);
 		}
@@ -163,8 +164,13 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
-		/** @var ServiceDefinition $logger */
 		$logger = $builder->getDefinition($this->prefix('logger'));
+
+		if (!$logger instanceof ServiceDefinition) {
+			throw new \Nette\InvalidStateException(
+				'Logger should be instance of ServiceDefinition, actual type is ' . get_class($logger)
+			);
+		}
 
 		foreach ($handlers = $this->findByTagSorted(self::TAG_HANDLER) as $serviceName => $meta) {
 			$logger->addSetup('pushHandler', ['@' . $serviceName]);
@@ -174,6 +180,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			$logger->addSetup('pushProcessor', ['@' . $serviceName]);
 		}
 
+		/** @var array $config */
 		$config = $this->getConfig();
 
 		// use fallback handler if no handlers are set up or user forces it
@@ -186,8 +193,13 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			]);
 		}
 
-		/** @var ServiceDefinition $service */
 		foreach ($builder->findByType(LoggerAwareInterface::class) as $service) {
+			if (!$service instanceof ServiceDefinition) {
+				throw new \Nette\InvalidStateException(
+					'Service should be instance of ServiceDefinition, actual type is ' . get_class($logger)
+				);
+			}
+
 			$service->addSetup('setLogger', ['@' . $this->prefix('logger')]);
 		}
 	}
@@ -210,8 +222,11 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 	{
 		$initialize = $class->getMethod('initialize');
 
+		/** @var array $config */
+		$config = $this->config;
+
 		if (empty(Debugger::$logDirectory)) {
-			$initialize->addBody('?::$logDirectory = ?;', [new PhpLiteral(Debugger::class), $this->config['logDir']]);
+			$initialize->addBody('?::$logDirectory = ?;', [new PhpLiteral(Debugger::class), $config['logDir']]);
 		}
 	}
 
