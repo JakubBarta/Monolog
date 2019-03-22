@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Monolog\Extension.
  *
@@ -29,6 +31,7 @@ class ExtensionTest extends \Tester\TestCase
 {
 
 	/**
+	 * @param null $configName
 	 * @return \SystemContainer|\Nette\DI\Container
 	 */
 	protected function createContainer($configName = NULL)
@@ -45,13 +48,13 @@ class ExtensionTest extends \Tester\TestCase
 		return $config->createContainer();
 	}
 
-	public function testServices()
+	public function testServices(): void
 	{
 		$dic = $this->createContainer();
 		Assert::true($dic->getService('monolog.logger') instanceof MonologLogger);
 	}
 
-	public function testFunctional()
+	public function testFunctional(): void
 	{
 		foreach (array_merge(glob(TEMP_DIR . '/*.log'), glob(TEMP_DIR . '/*.html')) as $logFile) {
 			unlink($logFile);
@@ -105,7 +108,7 @@ class ExtensionTest extends \Tester\TestCase
 		Assert::count(3, glob(TEMP_DIR . '/exception-*.html'));
 	}
 
-	public function testHandlersSorting()
+	public function testHandlersSorting(): void
 	{
 		$dic = $this->createContainer('handlers');
 		$logger = $dic->getByType(MonologLogger::class);
@@ -116,7 +119,7 @@ class ExtensionTest extends \Tester\TestCase
 		Assert::type(BrowserConsoleHandler::class, array_shift($handlers));
 	}
 
-	public function testProcessorsSorting()
+	public function testProcessorsSorting(): void
 	{
 		$dic = $this->createContainer('processors');
 		$logger = $dic->getByType(MonologLogger::class);

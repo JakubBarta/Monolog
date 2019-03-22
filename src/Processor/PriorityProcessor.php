@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -21,7 +23,7 @@ class PriorityProcessor
 
 	use \Kdyby\StrictObjects\Scream;
 
-	public function __invoke($record)
+	public function __invoke(array $record): array
 	{
 		if (isset($record['context']['channel'])) {
 			$record['channel'] = $record['context']['channel'];

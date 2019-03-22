@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -42,7 +44,7 @@ class FallbackNetteHandler extends \Monolog\Handler\ErrorLogHandler
 	 */
 	private $priorityFormatter;
 
-	public function __construct($appName, $logDir, $expandNewlines = FALSE, $level = MonologLogger::DEBUG)
+	public function __construct(string $appName, string $logDir, bool $expandNewlines = FALSE, int $level = MonologLogger::DEBUG)
 	{
 		parent::__construct(self::SAPI, $level, TRUE, $expandNewlines);
 		$this->appName = $appName;
@@ -52,7 +54,7 @@ class FallbackNetteHandler extends \Monolog\Handler\ErrorLogHandler
 		$this->priorityFormatter = new LineFormatter('[%datetime%] %level_name%: %message% %context% %extra%');
 	}
 
-	public function handle(array $record)
+	public function handle(array $record): bool
 	{
 		if ($record['channel'] === $this->appName) {
 			$this->setFormatter($this->defaultFormatter);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Monolog\PriorityProcessor.
  *
@@ -10,13 +12,14 @@ namespace KdybyTests\Monolog;
 
 use Kdyby\Monolog\Processor\PriorityProcessor;
 use Tester\Assert;
+use function call_user_func;
 
 require_once __DIR__ . '/../bootstrap.php';
 
 class PriorityProcessorTest extends \Tester\TestCase
 {
 
-	public function dataFunctional()
+	public function dataFunctional(): array
 	{
 		return [
 			[
@@ -78,8 +81,10 @@ class PriorityProcessorTest extends \Tester\TestCase
 
 	/**
 	 * @dataProvider dataFunctional
+	 * @param array $expectedRecord
+	 * @param array $providedRecord
 	 */
-	public function testFunctional($expectedRecord, $providedRecord)
+	public function testFunctional(array $expectedRecord, array $providedRecord): void
 	{
 		Assert::same($expectedRecord, call_user_func(new PriorityProcessor(), $providedRecord));
 	}

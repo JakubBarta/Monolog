@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Monolog\MonologAdapter.
  *
@@ -36,7 +38,7 @@ class MonologAdapterTest extends \Tester\TestCase
 	 */
 	protected $testHandler;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->testHandler = new TestHandler();
 		$this->monolog = new MonologLogger('kdyby', [$this->testHandler]);
@@ -44,10 +46,7 @@ class MonologAdapterTest extends \Tester\TestCase
 		$this->adapter = new MonologAdapter($this->monolog, $blueScreenRenderer);
 	}
 
-	/**
-	 * @return array
-	 */
-	public function dataLogStandard()
+	public function dataLogStandard(): array
 	{
 		return [
 			['test message 1', 'debug'],
@@ -63,14 +62,16 @@ class MonologAdapterTest extends \Tester\TestCase
 
 	/**
 	 * @dataProvider dataLogStandard
+	 * @param string $message
+	 * @param string $priority
 	 */
-	public function testLogStandard($message, $priority)
+	public function testLogStandard(string $message, string $priority): void
 	{
 		Assert::count(0, $this->testHandler->getRecords());
 		$this->adapter->log($message, $priority);
 		Assert::count(1, $this->testHandler->getRecords());
 
-		list($record) = $this->testHandler->getRecords();
+		[$record] = $this->testHandler->getRecords();
 		Assert::same('kdyby', $record['channel']);
 		Assert::same($message, $record['message']);
 		Assert::same(strtoupper($priority), $record['level_name']);
@@ -79,12 +80,12 @@ class MonologAdapterTest extends \Tester\TestCase
 		Assert::match('CLI%a%: %a%/MonologAdapterTest.phpt%a%', $record['context']['at']);
 	}
 
-	public function testLogWithCustomPriority()
+	public function testLogWithCustomPriority(): void
 	{
 		$this->adapter->log('test message', 'nemam');
 		Assert::count(1, $this->testHandler->getRecords());
 
-		list($record) = $this->testHandler->getRecords();
+		[$record] = $this->testHandler->getRecords();
 		Assert::same('kdyby', $record['channel']);
 		Assert::same('test message', $record['message']);
 		Assert::same('INFO', $record['level_name']);

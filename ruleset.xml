@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <ruleset name="Kdyby/Monolog">
-	<rule ref="vendor/kdyby/coding-standard/KdybyCodingStandard/ruleset-7.1.xml"/>
+	<rule ref="vendor/kdyby/coding-standard/KdybyCodingStandard/ruleset-7.1.xml">
+		<exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification"/>
+		<exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification"/>
+		<exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableReturnTypeHintSpecification"/>
+		<exclude name="Squiz.Commenting.FunctionComment.InvalidNoReturn"/>
+		<exclude name="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable"/>
+	</rule>
 
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
 		<exclude-pattern>src/Exception/Exception.php</exclude-pattern>

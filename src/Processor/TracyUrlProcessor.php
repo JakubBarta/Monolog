@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -27,13 +29,13 @@ class TracyUrlProcessor
 	 */
 	private $blueScreenRenderer;
 
-	public function __construct($baseUrl, BlueScreenRenderer $blueScreenRenderer)
+	public function __construct(string $baseUrl, BlueScreenRenderer $blueScreenRenderer)
 	{
 		$this->baseUrl = rtrim($baseUrl, '/');
 		$this->blueScreenRenderer = $blueScreenRenderer;
 	}
 
-	public function __invoke(array $record)
+	public function __invoke(array $record): array
 	{
 		if ($this->isHandling($record)) {
 			$exceptionFile = $this->blueScreenRenderer->getExceptionFile($record['context']['exception']);
@@ -43,7 +45,7 @@ class TracyUrlProcessor
 		return $record;
 	}
 
-	public function isHandling(array $record)
+	public function isHandling(array $record): bool
 	{
 		return isset($record['context']['exception'])
 			&& ($record['context']['exception'] instanceof \Throwable || $record['context']['exception'] instanceof \Exception);

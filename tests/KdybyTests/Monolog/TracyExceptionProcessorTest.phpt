@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Monolog\Processor\TracyExceptionProcessor.
  *
@@ -12,6 +14,7 @@ use Kdyby\Monolog\Processor\TracyExceptionProcessor;
 use Kdyby\Monolog\Tracy\BlueScreenRenderer;
 use Tester\Assert;
 use Tracy\BlueScreen;
+use function call_user_func;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -23,12 +26,12 @@ class TracyExceptionProcessorTest extends \Tester\TestCase
 	 */
 	private $processor;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->processor = new TracyExceptionProcessor(new BlueScreenRenderer(TEMP_DIR, new BlueScreen()));
 	}
 
-	public function testIgnoreAlreadyProcessed()
+	public function testIgnoreAlreadyProcessed(): void
 	{
 		$exception = new \RuntimeException('ignore me please');
 		$record = [
@@ -42,7 +45,7 @@ class TracyExceptionProcessorTest extends \Tester\TestCase
 		Assert::same($record, $updatedRecord);
 	}
 
-	public function testLogBlueScreenFromContext()
+	public function testLogBlueScreenFromContext(): void
 	{
 		$exception = new \RuntimeException('message');
 		$record = [

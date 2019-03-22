@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -27,7 +29,7 @@ class TracyExceptionProcessor
 		$this->blueScreenRenderer = $blueScreenRenderer;
 	}
 
-	public function __invoke(array $record)
+	public function __invoke(array $record): array
 	{
 		if (!$this->isHandling($record)) {
 			return $record;
@@ -45,7 +47,7 @@ class TracyExceptionProcessor
 		return $record;
 	}
 
-	public function isHandling(array $record)
+	public function isHandling(array $record): bool
 	{
 		return !isset($record['context']['tracy'])
 			&& !isset($record['context']['tracy_filename'])

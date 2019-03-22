@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -34,9 +36,9 @@ use Tracy\ILogger;
 class MonologExtension extends \Nette\DI\CompilerExtension
 {
 
-	const TAG_HANDLER = 'monolog.handler';
-	const TAG_PROCESSOR = 'monolog.processor';
-	const TAG_PRIORITY = 'monolog.priority';
+	private const TAG_HANDLER = 'monolog.handler';
+	private const TAG_PROCESSOR = 'monolog.processor';
+	private const TAG_PRIORITY = 'monolog.priority';
 
 	/**
 	 * @var mixed[]
@@ -52,7 +54,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		'accessPriority' => ILogger::INFO,
 	];
 
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -103,7 +105,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		$this->loadProcessors($config);
 	}
 
-	protected function loadHandlers(array $config)
+	protected function loadHandlers(array $config): void
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -119,7 +121,10 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	protected function loadProcessors(array $config)
+	/**
+	 * @param array <string, string>  $config
+	 */
+	protected function loadProcessors(array $config): void
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -161,7 +166,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$logger = $builder->getDefinition($this->prefix('logger'));
@@ -172,11 +177,14 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 			);
 		}
 
-		foreach ($handlers = $this->findByTagSorted(self::TAG_HANDLER) as $serviceName => $meta) {
+		$handlers = $this->findByTagSorted(self::TAG_HANDLER);
+		$serviceNames = array_keys($handlers);
+		foreach ($serviceNames as $serviceName) {
 			$logger->addSetup('pushHandler', ['@' . $serviceName]);
 		}
 
-		foreach ($this->findByTagSorted(self::TAG_PROCESSOR) as $serviceName => $meta) {
+		$serviceNames = array_keys($this->findByTagSorted(self::TAG_PROCESSOR));
+		foreach ($serviceNames as $serviceName) {
 			$logger->addSetup('pushProcessor', ['@' . $serviceName]);
 		}
 
@@ -204,12 +212,12 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	protected function findByTagSorted($tag)
+	protected function findByTagSorted(string $tag): array
 	{
 		$builder = $this->getContainerBuilder();
 
 		$services = $builder->findByTag($tag);
-		uksort($services, function ($nameA, $nameB) use ($builder) {
+		uksort($services, static function ($nameA, $nameB) use ($builder) {
 			$pa = $builder->getDefinition($nameA)->getTag(self::TAG_PRIORITY) ?: 0;
 			$pb = $builder->getDefinition($nameB)->getTag(self::TAG_PRIORITY) ?: 0;
 			return $pa > $pb ? 1 : ($pa < $pb ? -1 : 0);
@@ -218,7 +226,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		return $services;
 	}
 
-	public function afterCompile(ClassTypeGenerator $class)
+	public function afterCompile(ClassTypeGenerator $class): void
 	{
 		$initialize = $class->getMethod('initialize');
 
@@ -230,17 +238,14 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	public static function register(Configurator $configurator)
+	public static function register(Configurator $configurator): void
 	{
-		$configurator->onCompile[] = function ($config, Compiler $compiler) {
+		$configurator->onCompile[] = static function ($config, Compiler $compiler): void {
 			$compiler->addExtension('monolog', new MonologExtension());
 		};
 	}
 
-	/**
-	 * @return string
-	 */
-	private static function resolveLogDir(array $parameters)
+	private static function resolveLogDir(array $parameters): string
 	{
 		if (isset($parameters['logDir'])) {
 			return DIHelpers::expand('%logDir%', $parameters);
@@ -253,10 +258,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 		return DIHelpers::expand('%appDir%/../log', $parameters);
 	}
 
-	/**
-	 * @param string $logDir
-	 */
-	private static function createDirectory($logDir)
+	private static function createDirectory(string $logDir): void
 	{
 		if (!@mkdir($logDir, 0777, TRUE) && !is_dir($logDir)) {
 			throw new \RuntimeException(sprintf('Log dir %s cannot be created', $logDir));

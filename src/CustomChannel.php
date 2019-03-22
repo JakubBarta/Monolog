@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -23,7 +25,7 @@ class CustomChannel extends \Monolog\Logger
 	 */
 	private $parentLogger;
 
-	public function __construct($name, KdybyLogger $parentLogger)
+	public function __construct(string $name, KdybyLogger $parentLogger)
 	{
 		parent::__construct($name, [], []);
 		$this->parentLogger = $parentLogger;

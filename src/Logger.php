@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -15,11 +17,7 @@ class Logger extends \Monolog\Logger
 
 	use \Kdyby\StrictObjects\Scream;
 
-	/**
-	 * @param string $channel
-	 * @return \Kdyby\Monolog\CustomChannel
-	 */
-	public function channel($channel)
+	public function channel(string $channel): CustomChannel
 	{
 		return new CustomChannel($channel, $this);
 	}

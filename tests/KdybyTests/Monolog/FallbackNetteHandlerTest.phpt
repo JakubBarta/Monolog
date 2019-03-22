@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Monolog\FallbackNetteHandler.
  *
@@ -33,7 +35,7 @@ class FallbackNetteHandlerTest extends \Tester\TestCase
 	 */
 	private $logDir;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->logDir = TEMP_DIR . '/log_' . getmypid() . '_' . number_format(microtime(TRUE), 6, '+', '');
 		@mkdir($this->logDir, 0777, TRUE);
@@ -47,7 +49,10 @@ class FallbackNetteHandlerTest extends \Tester\TestCase
 		$this->now = new DateTime();
 	}
 
-	public function dataWriteStandardLevels()
+	/**
+	 * @return array<int, array <int, string>>
+	 */
+	public function dataWriteStandardLevels(): array
 	{
 		return [
 			[MonologLogger::DEBUG, 'debug'],
@@ -63,8 +68,10 @@ class FallbackNetteHandlerTest extends \Tester\TestCase
 
 	/**
 	 * @dataProvider dataWriteStandardLevels
+	 * @param int $level
+	 * @param string $levelName
 	 */
-	public function testWriteStandardLevels($level, $levelName)
+	public function testWriteStandardLevels(int $level, string $levelName): void
 	{
 		$this->handler->handle([
 			'message' => 'test message',
@@ -82,7 +89,7 @@ class FallbackNetteHandlerTest extends \Tester\TestCase
 		);
 	}
 
-	public function testWriteCustomChannel()
+	public function testWriteCustomChannel(): void
 	{
 		$this->handler->handle([
 			'message' => 'test message',
@@ -111,7 +118,7 @@ class FallbackNetteHandlerTest extends \Tester\TestCase
 		);
 	}
 
-	public function testWriteContextAsJson()
+	public function testWriteContextAsJson(): void
 	{
 		$this->handler->handle([
 			'message' => 'test message',
@@ -129,7 +136,7 @@ class FallbackNetteHandlerTest extends \Tester\TestCase
 		);
 	}
 
-	public function testWriteExtraAsJson()
+	public function testWriteExtraAsJson(): void
 	{
 		$this->handler->handle([
 			'message' => 'test message',

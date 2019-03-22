@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -22,7 +24,7 @@ class MonologAdapter extends \Tracy\Logger
 
 	use \Kdyby\StrictObjects\Scream;
 
-	const ACCESS = 'access';
+	private const ACCESS = 'access';
 
 	/**
 	 * @var int[]
@@ -54,8 +56,8 @@ class MonologAdapter extends \Tracy\Logger
 	public function __construct(
 		MonologLogger $monolog,
 		BlueScreenRenderer $blueScreenRenderer,
-		$email = NULL,
-		$accessPriority = self::INFO
+		?string $email = NULL,
+		string $accessPriority = self::INFO
 	)
 	{
 		parent::__construct($blueScreenRenderer->directory, $email);
@@ -64,14 +66,16 @@ class MonologAdapter extends \Tracy\Logger
 		$this->accessPriority = $accessPriority;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function getExceptionFile(\Throwable $exception): string
 	{
 		return $this->blueScreenRenderer->getExceptionFile($exception);
 	}
 
+	/**
+	 * @param \Throwable|\Exception|string $originalMessage
+	 * @param string $priority
+	 * @return string|null
+	 */
 	public function log($originalMessage, string $priority = self::INFO): ?string
 	{
 		$message = self::formatMessage($originalMessage);
@@ -84,7 +88,7 @@ class MonologAdapter extends \Tracy\Logger
 			$context['exception'] = $originalMessage;
 		}
 
-		$exceptionFile = ($originalMessage instanceof \Throwable || $originalMessage instanceof \Exception)
+		$exceptionFile = $originalMessage instanceof \Throwable || $originalMessage instanceof \Exception
 			? $this->getExceptionFile($originalMessage)
 			: NULL;
 
@@ -93,7 +97,7 @@ class MonologAdapter extends \Tracy\Logger
 				@date('[Y-m-d H-i-s]'),
 				$message,
 				' @ ' . Helpers::getSource(),
-				($exceptionFile !== NULL) ? ' @@ ' . basename($exceptionFile) : NULL,
+				$exceptionFile !== NULL ? ' @@ ' . basename($exceptionFile) : NULL,
 			]));
 		}
 
@@ -110,12 +114,7 @@ class MonologAdapter extends \Tracy\Logger
 		return $exceptionFile;
 	}
 
-	/**
-	 * @param string $priority
-	 *
-	 * @return int
-	 */
-	protected function getLevel($priority)
+	protected function getLevel(string $priority): int
 	{
 		if (isset($this->priorityMap[$priority])) {
 			return $this->priorityMap[$priority];

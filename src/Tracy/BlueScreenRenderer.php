@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -17,7 +19,7 @@ class BlueScreenRenderer extends \Tracy\Logger
 
 	use \Kdyby\StrictObjects\Scream;
 
-	public function __construct($directory, BlueScreen $blueScreen)
+	public function __construct(string $directory, BlueScreen $blueScreen)
 	{
 		parent::__construct($directory, NULL, $blueScreen);
 	}
@@ -35,6 +37,9 @@ class BlueScreenRenderer extends \Tracy\Logger
 	/**
 	 * @internal
 	 * @deprecated
+	 * @param mixed $message
+	 * @param string $priority
+	 * @return string|null
 	 */
 	public function log($message, string $priority = self::INFO): ?string
 	{
@@ -44,6 +49,8 @@ class BlueScreenRenderer extends \Tracy\Logger
 	/**
 	 * @internal
 	 * @deprecated
+	 * @param mixed $message
+	 * @param string $email
 	 */
 	public function defaultMailer($message, string $email): void
 	{

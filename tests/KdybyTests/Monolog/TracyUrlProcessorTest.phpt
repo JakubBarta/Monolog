@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Monolog\Processor\TracyUrlProcessor.
  *
@@ -12,6 +14,7 @@ use Kdyby\Monolog\Processor\TracyUrlProcessor;
 use Kdyby\Monolog\Tracy\BlueScreenRenderer;
 use Tester\Assert;
 use Tracy\BlueScreen;
+use function call_user_func;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -28,13 +31,13 @@ class TracyUrlProcessorTest extends \Tester\TestCase
 	 */
 	private $processor;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->blueScreenRenderer = new BlueScreenRenderer(TEMP_DIR, new BlueScreen());
 		$this->processor = new TracyUrlProcessor('https://exceptions.kdyby.org', $this->blueScreenRenderer);
 	}
 
-	public function testProcessWithException()
+	public function testProcessWithException(): void
 	{
 		$exception = new \RuntimeException(__FUNCTION__);
 		$exceptionFile = basename($this->blueScreenRenderer->getExceptionFile($exception));
@@ -49,7 +52,7 @@ class TracyUrlProcessorTest extends \Tester\TestCase
 		Assert::same('https://exceptions.kdyby.org/' . $exceptionFile, $processed['context']['tracyUrl']);
 	}
 
-	public function testIgnoreProcessWithoutException()
+	public function testIgnoreProcessWithoutException(): void
 	{
 		$record = [
 			'message' => 'Some error',
