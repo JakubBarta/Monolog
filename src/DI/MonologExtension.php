@@ -122,7 +122,7 @@ class MonologExtension extends \Nette\DI\CompilerExtension
 	}
 
 	/**
-	 * @param array <string, string>  $config
+	 * @param array $config
 	 */
 	protected function loadProcessors(array $config): void
 	{

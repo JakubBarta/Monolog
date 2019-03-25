@@ -84,11 +84,11 @@ class MonologAdapter extends \Tracy\Logger
 			'at' => Helpers::getSource(),
 		];
 
-		if ($originalMessage instanceof \Throwable || $originalMessage instanceof \Exception) {
+		if ($originalMessage instanceof \Throwable) {
 			$context['exception'] = $originalMessage;
 		}
 
-		$exceptionFile = $originalMessage instanceof \Throwable || $originalMessage instanceof \Exception
+		$exceptionFile = $originalMessage instanceof \Throwable
 			? $this->getExceptionFile($originalMessage)
 			: NULL;
 
