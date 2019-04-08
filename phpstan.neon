@@ -1,0 +1,5 @@
+parameters:
+	excludes_analyse:
+#		- %currentWorkingDirectory%/src/Tracy/MonologAdapter25.php
+#		- %currentWorkingDirectory%/src/Tracy/MonologAdapter25.php
+#		- %currentWorkingDirectory%/src/DI/MonologExtension24.php

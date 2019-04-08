@@ -12,4 +12,14 @@
 		<exclude-pattern>src/Exception/Exception.php</exclude-pattern>
 		<exclude-pattern>src/Exception/NotSupportedException.php</exclude-pattern>
 	</rule>
+
+	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint">
+		<exclude-pattern>src/Tracy/MonologAdapter24.php</exclude-pattern>
+		<exclude-pattern>src/Tracy/BlueScreenRenderer24.php</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint">
+		<exclude-pattern>src/Tracy/MonologAdapter24.php</exclude-pattern>
+		<exclude-pattern>src/Tracy/BlueScreenRenderer24.php</exclude-pattern>
+	</rule>
 </ruleset>

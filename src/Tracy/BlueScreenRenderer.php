@@ -10,51 +10,14 @@ declare(strict_types = 1);
  * For the full copyright and license information, please view the file license.txt that was distributed with this source code.
  */
 
-namespace Kdyby\Monolog\Tracy;
+use Kdyby\Monolog\Tracy\BlueScreenRenderer24;
+use Kdyby\Monolog\Tracy\BlueScreenRenderer25;
+use Tracy\Debugger;
 
-use Tracy\BlueScreen;
+$parts = explode('.', Debugger::VERSION);
 
-class BlueScreenRenderer extends \Tracy\Logger
-{
-
-	use \Kdyby\StrictObjects\Scream;
-
-	public function __construct(string $directory, BlueScreen $blueScreen)
-	{
-		parent::__construct($directory, NULL, $blueScreen);
-	}
-
-	/**
-	 * @param \Exception|\Throwable $exception
-	 * @param string $file
-	 * @return string logged error filename
-	 */
-	public function renderToFile(\Throwable $exception, string $file): string
-	{
-		return parent::logException($exception, $file);
-	}
-
-	/**
-	 * @internal
-	 * @deprecated
-	 * @param mixed $message
-	 * @param string $priority
-	 * @return string|null
-	 */
-	public function log($message, string $priority = self::INFO): ?string
-	{
-		throw new \Kdyby\Monolog\Exception\NotSupportedException('This class is only for rendering exceptions');
-	}
-
-	/**
-	 * @internal
-	 * @deprecated
-	 * @param mixed $message
-	 * @param string $email
-	 */
-	public function defaultMailer($message, string $email): void
-	{
-		// pass
-	}
-
+if ($parts[0] === '2' && $parts[1] === '6') {
+	class_alias(BlueScreenRenderer24::class, '\Kdyby\Monolog\Tracy\BlueScreenRenderer');
+} else {
+	class_alias(BlueScreenRenderer25::class, '\Kdyby\Monolog\Tracy\BlueScreenRenderer');
 }

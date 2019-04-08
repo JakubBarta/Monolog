@@ -6,6 +6,7 @@ declare(strict_types = 1);
  * Test: Kdyby\Monolog\Extension.
  *
  * @testCase
+ * @skip
  */
 
 namespace KdybyTests\Monolog;
