@@ -19,14 +19,14 @@
 	],
 	"require": {
 		"php": "^7.1  || ^7.2  || ^7.3",
-		"nette/di": "~2.4 || ~3.0.0@dev",
+		"nette/di": "~3.0.0@dev",
 		"kdyby/strict-objects": "~1.0.0",
 		"monolog/monolog": "^1.24",
 		"tracy/tracy": "~2.6 || ~3.0.0@dev",
 		"nette/caching": "~2.5 || ~3.0.0@dev"
 	},
 	"require-dev": {
-		"nette/application": "~2.4 || ~3.0.0@dev",
+		"nette/application": "~3.0.0@dev",
 		"nette/bootstrap": "~2.4 || ~3.0.0@dev",
 		"nette/http": "~2.4 || ~3.0.0@dev",
 		"nette/tester": "~2.2",
